@@ -265,7 +265,7 @@ function App() {
     if (needsId) {
       if (!singleId || !/^\d+$/.test(singleId.trim())) {
         setConsoleReq({ 
-          url: `${backendUrl}/api/${resInfo.version}/${selectedResource}/${singleId || '{id}'}`, 
+          url: `${backendUrl}/api/${selectedResource}/${singleId || '{id}'}`, 
           method: selectedOp === 'GET_BY_ID' ? 'GET' : selectedOp, 
           headers: { 'Authorization': 'Bearer ...' }, 
           body: '' 
@@ -282,7 +282,7 @@ function App() {
       }
     }
 
-    let path = `${backendUrl}/api/${resInfo.version}/${selectedResource}`;
+    let path = `${backendUrl}/api/${selectedResource}`;
     let method = 'GET';
     let headers: Record<string, string> = {
       'Accept': 'application/json',

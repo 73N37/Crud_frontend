@@ -137,7 +137,7 @@ test.describe('CRUD operations via backend API', () => {
     await page.goto('/');
     const token = await mintJwt(page);
 
-    const response = await request.post(`${BACKEND}/api/v1/products`, {
+    const response = await request.post(`${BACKEND}/api/products`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -161,7 +161,7 @@ test.describe('CRUD operations via backend API', () => {
     await page.goto('/');
     const token = await mintJwt(page);
 
-    const response = await request.get(`${BACKEND}/api/v1/products?size=100`, {
+    const response = await request.get(`${BACKEND}/api/products?size=100`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -175,7 +175,7 @@ test.describe('CRUD operations via backend API', () => {
     await page.goto('/');
     const token = await mintJwt(page);
 
-    const response = await request.get(`${BACKEND}/api/v1/products/${createdId}`, {
+    const response = await request.get(`${BACKEND}/api/products/${createdId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -189,7 +189,7 @@ test.describe('CRUD operations via backend API', () => {
     await page.goto('/');
     const token = await mintJwt(page);
 
-    const response = await request.put(`${BACKEND}/api/v1/products/${createdId}`, {
+    const response = await request.put(`${BACKEND}/api/products/${createdId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -212,13 +212,13 @@ test.describe('CRUD operations via backend API', () => {
     await page.goto('/');
     const token = await mintJwt(page);
 
-    const delResponse = await request.delete(`${BACKEND}/api/v1/products/${createdId}`, {
+    const delResponse = await request.delete(`${BACKEND}/api/products/${createdId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     expect(delResponse.status()).toBe(204);
 
     // Confirm it's gone
-    const getResponse = await request.get(`${BACKEND}/api/v1/products/${createdId}`, {
+    const getResponse = await request.get(`${BACKEND}/api/products/${createdId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     expect(getResponse.status()).toBe(404);
@@ -227,7 +227,7 @@ test.describe('CRUD operations via backend API', () => {
 
 test.describe('Security enforcement', () => {
   test('401 when no auth token is provided', async ({ request }) => {
-    const response = await request.get(`${BACKEND}/api/v1/products`, {
+    const response = await request.get(`${BACKEND}/api/products`, {
       failOnStatusCode: false,
     });
     expect(response.status()).toBe(401);
@@ -237,7 +237,7 @@ test.describe('Security enforcement', () => {
     await page.goto('/');
     const token = await mintJwt(page, 'guest-user', ['GUEST']);
 
-    const response = await request.get(`${BACKEND}/api/v1/products`, {
+    const response = await request.get(`${BACKEND}/api/products`, {
       headers: { Authorization: `Bearer ${token}` },
       failOnStatusCode: false,
     });
@@ -248,7 +248,7 @@ test.describe('Security enforcement', () => {
     await page.goto('/');
     const token = await mintJwt(page);
 
-    const response = await request.post(`${BACKEND}/api/v1/products`, {
+    const response = await request.post(`${BACKEND}/api/products`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -268,7 +268,7 @@ test.describe('Security enforcement', () => {
     await page.goto('/');
     const token = await mintJwt(page);
 
-    const response = await request.post(`${BACKEND}/api/v1/products`, {
+    const response = await request.post(`${BACKEND}/api/products`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -294,7 +294,7 @@ test.describe('Multi-tenant isolation', () => {
 
     // Create product as tenant-A
     const tokenA = await mintJwt(page, 'user-a', ['ADMIN'], 'tenant-alpha');
-    const createRes = await request.post(`${BACKEND}/api/v1/products`, {
+    const createRes = await request.post(`${BACKEND}/api/products`, {
       headers: {
         Authorization: `Bearer ${tokenA}`,
         'Content-Type': 'application/json',
@@ -309,7 +309,7 @@ test.describe('Multi-tenant isolation', () => {
 
     // Attempt to list products as tenant-B
     const tokenB = await mintJwt(page, 'user-b', ['ADMIN'], 'tenant-beta');
-    const listRes = await request.get(`${BACKEND}/api/v1/products?size=100`, {
+    const listRes = await request.get(`${BACKEND}/api/products?size=100`, {
       headers: { Authorization: `Bearer ${tokenB}` },
     });
     expect(listRes.status()).toBe(200);
